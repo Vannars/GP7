@@ -1,0 +1,539 @@
+/*
+	The Game Project Part 4 - Character Interaction
+*/
+var isLeft;
+var isRight;
+var isFalling;
+var gameChar_x;
+var gameChar_y;
+var floorPos_y;
+var canyon;
+var flag
+var flagPos_X
+var flagPos_Y;
+
+function setup() {
+    //CANVAS SETUP
+    createCanvas(1024, 576);
+    floorPos_y = height * 3 / 4;
+    //GAME CHARACTER CONDITIONS
+    gameChar_x = width / 2;
+    gameChar_y = floorPos_y;
+    isLeft = false;
+    isRight = false;
+    isFalling = false;
+    //CANYON SETUP
+    canyon = {
+        x_pos: 200,
+        width: 150,
+        isPlummeting: false
+    };
+    //initialises the collectable
+    collectable = {
+        Pos_x: 454,
+        Pos_y: 380,
+        size: 15,
+        isFound: false
+    };
+    //FLAG
+    flag = {
+        flagPos_X: 701,
+        flagPos_Y: 601,
+        size: 2.8,
+        isReached: false,
+        beamLength: 0
+    };
+}
+
+function draw() {
+    ///////////DRAWING CODE//////////
+    background(100, 155, 255); //fill the sky blue
+    noStroke();
+    fill(0, 155, 0);
+    rect(0, floorPos_y,
+        width,
+        height - floorPos_y);
+    //draw some green ground
+    //draw the canyon
+    noStroke();
+    fill(92, 40, 0);
+    rect(canyon.x_pos,
+        floorPos_y, canyon.width,
+        height - floorPos_y);
+    "Draw the Collectable"
+    if (collectable.isFound == false) {
+        r = random(-2, 2);
+        fill(255, 0, 0);
+        rect(collectable.Pos_x,
+            collectable.Pos_y - 6 + r, collectable.size * 0.5,
+            collectable.size);
+        fill(255, 255, 0);
+        rect(collectable.Pos_x,
+            collectable.Pos_y + r,
+            collectable.size * 0.5, collectable.size);
+    }
+    if (dist(gameChar_x + 2 || gameChar_x - 10,
+            gameChar_y + 5 || gameChar_y - 5,
+            collectable.Pos_x + 5 || collectable.Pos_x - 5,
+            collectable.Pos_y + 20 || collectable.Pos_y) < 40) {
+        collectable.isFound = true
+    }
+    "Draw the Flag"
+    if (dist(gameChar_x - 15 || gameChar_x + 15,
+            gameChar_y + 100, flag.flagPos_X + 20,
+            flag.flagPos_Y - 100 || flag.flagPos_Y + 18) < 85) {
+        //Rocket Ship  
+        flag.isReached = true
+        flag.beamLength -= 30
+        beginShape()
+        strokeWeight(2);
+        stroke(255);
+        fill(0);
+        //Ship Wing
+        triangle(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 107 * flag.size,
+            flag.flagPos_X - 2 * flag.size,
+            flag.flagPos_Y - 75 * flag.size,
+            flag.flagPos_X + 37 * flag.size,
+            flag.flagPos_Y - 75 * flag.size);
+        //Ship Flag(beam)
+        noStroke()
+        fill(random(200, 255),
+            0,
+            random(200, 255))
+        rect(flag.flagPos_X + 48,
+            flag.flagPos_Y - 240,
+            4,
+            flag.beamLength);
+        //Ship Tip
+        stroke(255)
+        fill(0)
+        triangle(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 110 * flag.size,
+            flag.flagPos_X + 12 * flag.size,
+            flag.flagPos_Y - 100 * flag.size,
+            flag.flagPos_X + 24 * flag.size,
+            flag.flagPos_Y - 100 * flag.size);
+        //Ship Booster 1
+        triangle(flag.flagPos_X + 15 * flag.size,
+            flag.flagPos_Y - 73 * flag.size,
+            flag.flagPos_X + 05 * flag.size,
+            flag.flagPos_Y - 61 * flag.size,
+            flag.flagPos_X + 19 * flag.size,
+            flag.flagPos_Y - 61 * flag.size);
+        //Ship Booster 2
+        triangle(flag.flagPos_X + 21 * flag.size,
+            flag.flagPos_Y - 73 * flag.size,
+            flag.flagPos_X + 19 * flag.size,
+            flag.flagPos_Y - 61 * flag.size,
+            flag.flagPos_X + 28 * flag.size,
+            flag.flagPos_Y - 61 * flag.size);
+        triangle(flag.flagPos_X + 21 * flag.size,
+            flag.flagPos_Y - 73 * flag.size,
+            flag.flagPos_X + 19 * flag.size,
+            flag.flagPos_Y - 61 * flag.size,
+            flag.flagPos_X + 17 * flag.size,
+            flag.flagPos_Y - 61 * flag.size);
+        //Body
+        fill(0)
+        rect(flag.flagPos_X + 12 * flag.size,
+            flag.flagPos_Y - 100 * flag.size,
+            flag.size * 12,
+            flag.size * 30);
+        //Ship Body Detailing
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 12);
+        fill(random(200, 255),
+            0,
+            random(200, 255))
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 8);
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 4);
+        fill(random(200, 255),
+            0,
+            random(200, 255))
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 2);
+        endShape();
+    } else {
+
+        //Rocket Ship   
+        flag.isReached = false
+        flag.beamLength = 0
+        beginShape()
+        strokeWeight(2);
+        stroke(255);
+        fill(0);
+        //Ship Wing
+        triangle(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 107 * flag.size,
+            flag.flagPos_X - 2 * flag.size,
+            flag.flagPos_Y - 75 * flag.size,
+            flag.flagPos_X + 37 * flag.size,
+            flag.flagPos_Y - 75 * flag.size);
+        //Ship Tip
+        triangle(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 110 * flag.size,
+            flag.flagPos_X + 12 * flag.size,
+            flag.flagPos_Y - 100 * flag.size,
+            flag.flagPos_X + 24 * flag.size,
+            flag.flagPos_Y - 100 * flag.size);
+        //Ship Booster 1
+        triangle(flag.flagPos_X + 15 * flag.size,
+            flag.flagPos_Y - 73 * flag.size,
+            flag.flagPos_X + 05 * flag.size,
+            flag.flagPos_Y - 61 * flag.size,
+            flag.flagPos_X + 19 * flag.size,
+            flag.flagPos_Y - 61 * flag.size);
+        //Ship Booster 2
+        triangle(flag.flagPos_X + 21 * flag.size,
+            flag.flagPos_Y - 73 * flag.size,
+            flag.flagPos_X + 19 * flag.size,
+            flag.flagPos_Y - 61 * flag.size,
+            flag.flagPos_X + 28 * flag.size,
+            flag.flagPos_Y - 61 * flag.size);
+        triangle(flag.flagPos_X + 21 * flag.size,
+            flag.flagPos_Y - 73 * flag.size,
+            flag.flagPos_X + 19 * flag.size,
+            flag.flagPos_Y - 61 * flag.size,
+            flag.flagPos_X + 17 * flag.size,
+            flag.flagPos_Y - 61 * flag.size);
+        //Booster
+        rect(flag.flagPos_X + 12 * flag.size,
+            flag.flagPos_Y - 100 * flag.size,
+            flag.size * 12, flag.size * 30);
+        //Ship Body Detailing
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 12);
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 8);
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 4);
+        ellipse(flag.flagPos_X + 18 * flag.size,
+            flag.flagPos_Y - 90 * flag.size,
+            flag.size * 2);
+        endShape();
+
+    }
+    //the game character
+    "Draw the MovableGame Character"
+    //FrontFacingInterior
+    if (isLeft && isFalling) {
+        // add your jumping-left code
+        //LeftFacingInterior
+        stroke(255);
+        strokeWeight(0.7)
+        fill(0)
+        arc(gameChar_x,
+            gameChar_y - 60, 30, 8, -91.18, -18.8);
+        strokeWeight(0.2)
+        //Pilot
+        fill(50);
+        ellipse(gameChar_x + 1,
+            gameChar_y - 61, 8, 12);
+        fill(255);
+        ellipse(gameChar_x - 1,
+            gameChar_y - 62, 6, 8);
+        //Viewport
+        fill(0, 0, 0, 100);
+        arc(gameChar_x,
+            gameChar_y - 60, 30, 30, -91.18, -18.8);
+
+        //P0DChasis
+        fill(0);
+        arc(gameChar_x,
+            gameChar_y - 60, 30.5, 30, 150,
+            PI);
+        //HoverBeams
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 45, 5, 2);
+        ellipse(gameChar_x + 3,
+            gameChar_y - 39, 8, 3);
+        ellipse(gameChar_x + 6,
+            gameChar_y - 32, 15, 4);
+        ellipse(gameChar_x + 10,
+            gameChar_y - 22, 20, 5);
+        fill(0)
+        ellipse(gameChar_x + 3,
+            gameChar_y - 39, 4, 1.5);
+        ellipse(gameChar_x + 6,
+            gameChar_y - 32, 7.5, 2);
+        ellipse(gameChar_x + 10,
+            gameChar_y - 22, 10, 2.5);
+    } else if (isRight && isFalling) {
+        // add your jumping-right code
+        //RightFacingInterior
+        stroke(255);
+        strokeWeight(0.7)
+        fill(0)
+        arc(gameChar_x,
+            gameChar_y - 40, 30, 8, -91.18, -18.8);
+        strokeWeight(0.2)
+        //Pilot
+        fill(50);
+        ellipse(gameChar_x - 1,
+            gameChar_y - 41, 8, 12);
+        fill(255);
+        ellipse(gameChar_x + 1,
+            gameChar_y - 42, 6, 8);
+        //Viewport
+        fill(0, 0, 0, 100);
+        arc(gameChar_x,
+            gameChar_y - 40, 30, 30, -91.18, -18.8);
+        //P0DChasis
+        fill(0)
+        arc(gameChar_x,
+            gameChar_y - 40, 30.5, 30, 0,
+            PI + QUARTER_PI * 1.3);
+        //HoverBeams
+        fill(255)
+        ellipse(gameChar_x,
+            gameChar_y - 25, 5, 2);
+        ellipse(gameChar_x - 3,
+            gameChar_y - 19, 8, 3);
+        ellipse(gameChar_x - 6,
+            gameChar_y - 12, 15, 4);
+        ellipse(gameChar_x - 10,
+            gameChar_y - 2, 20, 5);
+        fill(0);
+        ellipse(gameChar_x - 3,
+            gameChar_y - 19, 4, 1.5);
+        ellipse(gameChar_x - 6,
+            gameChar_y - 12, 7.5, 1);
+        ellipse(gameChar_x - 10,
+            gameChar_y - 2, 10, 2.5);
+
+    } else if (isLeft) {
+        // add your walking left code
+        stroke(255);
+        strokeWeight(0.7)
+        fill(0)
+        arc(gameChar_x,
+            gameChar_y - 30, 30, 8, -91.18, -18.8);
+        strokeWeight(0.2)
+        //Pilot
+        fill(50);
+        ellipse(gameChar_x + 1,
+            gameChar_y - 30.5, 8, 12);
+        fill(255);
+        ellipse(gameChar_x - 1,
+            gameChar_y - 31, 6, 8);
+        //Viewport
+        fill(0, 0, 0, 100);
+        arc(gameChar_x,
+            gameChar_y - 30, 30, 30, -91.18, -18.8);
+        //P0DChasis
+        fill(0);
+        arc(gameChar_x,
+            gameChar_y - 30, 30.5, 30, 150,
+            PI);
+        //HoverBeams
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 15, 6, 3);
+        ellipse(gameChar_x + 5,
+            gameChar_y - 10, 14, 3);
+        fill(0);
+        ellipse(gameChar_x + 5,
+            gameChar_y - 10, 7, 1.5);
+    } else if (isRight) {
+        // add your walking right code
+        stroke(255);
+        strokeWeight(0.7)
+        fill(0)
+        arc(gameChar_x,
+            gameChar_y - 30, 30, 8, -91.18, -18.8);
+        strokeWeight(0.2)
+        //Pilot
+        fill(50);
+        ellipse(gameChar_x - 1,
+            gameChar_y - 30.5, 8, 12);
+        fill(255);
+        ellipse(gameChar_x + 1,
+            gameChar_y - 31, 6, 8);
+
+        //Viewport
+        fill(0, 0, 0, 100);
+        arc(gameChar_x,
+            gameChar_y - 30, 30, 30, -91.18, -18.8);
+
+        //P0DChasis
+        fill(0)
+        arc(gameChar_x,
+            gameChar_y - 30, 30.5, 30, 0,
+            PI + QUARTER_PI * 1.3);
+
+        //HoverBeams
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 15, 6, 3);
+        ellipse(gameChar_x - 5,
+            gameChar_y - 10, 14, 3);
+        fill(0);
+        ellipse(gameChar_x - 5,
+            gameChar_y - 10, 7, 1.5);
+    } else if (isFalling) {
+        // add your jumping facing forwards code
+        //FrontFacingInterior
+        stroke(255);
+        strokeWeight(0.7);
+        fill(0);
+        arc(gameChar_x,
+            gameChar_y - 39, 30, 21.8, -91.18, -18.8);
+        //Pilot
+        strokeWeight(0.2);
+        fill(50);
+        ellipse(gameChar_x,
+            gameChar_y - 39.5, 13, 11);
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 34.5, 6, 3);
+        ellipse(gameChar_x,
+            gameChar_y - 40, 5.5, 7.5);
+        //Viewport
+        fill(0, 0, 0, 100);
+        arc(gameChar_x,
+            gameChar_y - 39, 30, 30, -91.18, -18.8);
+        //P0DChasis
+        fill(0);
+        arc(gameChar_x,
+            gameChar_y - 39, 30.5, 30, 0,
+            PI);
+        //HoverBeams
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 24, 5, 2);
+        ellipse(gameChar_x,
+            gameChar_y - 18, 8, 3);
+        ellipse(gameChar_x,
+            gameChar_y - 12, 15, 4);
+        ellipse(gameChar_x,
+            gameChar_y - 5, 20, 5);
+        fill(0);
+        ellipse(gameChar_x,
+            gameChar_y - 18, 4, 1.5);
+        ellipse(gameChar_x,
+            gameChar_y - 12, 7.5, 2);
+        ellipse(gameChar_x,
+            gameChar_y - 5, 10, 2.5);
+    } else {
+        // add your standing front facing code
+        stroke(255);
+        strokeWeight(1);
+        fill(0);
+        arc(gameChar_x,
+            gameChar_y - 30, 30, 21.8, -91.18, -18.8);
+        strokeWeight(.5);
+        //Pilot
+        fill(50);
+        ellipse(gameChar_x,
+            gameChar_y - 30.5, 13, 11);
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 32.5, 6, 6);
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 32, 5.5, 7.5);
+        //Viewport
+        fill(0, 0, 0, 100);
+        arc(gameChar_x,
+            gameChar_y - 30, 30, 30, -91.18, -18.8);
+        //P0DChasis   
+        fill(0);
+        arc(gameChar_x,
+            gameChar_y - 30, 30.5, 30, 0,
+            PI);
+        //HoverBeams
+        fill(255);
+        ellipse(gameChar_x,
+            gameChar_y - 15, 6, 2);
+        ellipse(gameChar_x,
+            gameChar_y - 10, 14, 3);
+        fill(0);
+        ellipse(gameChar_x,
+            gameChar_y - 10, 6, 1.5);
+    }
+     //Canyon PHYSICS
+    if ((gameChar_x > canyon.x_pos && gameChar_y >= floorPos_y) 
+        && 
+        (gameChar_x < canyon.x_pos + canyon.width && gameChar_y >= floorPos_y))
+    {
+        canyon.isPlummeting = true
+        isFalling = true
+        isLeft = false
+        isRight = false
+        gameChar_y += 5
+    }
+//MOVE LEFT
+    if (isLeft == true) 
+    {
+        gameChar_x -= 3;
+    }
+    if (isLeft == true && isFalling == true)
+        {
+            gameChar_x -= 4
+        }
+    //MOVE RIGHT
+    if (isRight == true) 
+    {
+        gameChar_x += 3;
+    }
+    if (isRight == true && isFalling == true)
+        {
+            gameChar_x +=4;
+        }
+    //JUMPING
+    if (gameChar_y < floorPos_y) 
+    {
+        gameChar_y += 5;
+        gameChar_y = gameChar_y - 1;
+        //GRAVITY
+    } else if (gameChar_y == floorPos_y)
+    {
+        isFalling = false;
+    }
+   
+}
+//MOVEMENT CODE
+function keyPressed() {
+    // if statements to control the animation of the character when
+    // keys are pressed.
+    //open up the console to see how these work
+    //MOVE LEFT
+    console.log("keyPressed: " + key);
+    if (key == "a" && canyon.isPlummeting == false &&  gameChar_x >= canyon.x_pos) {
+        isLeft = true;
+    }
+    //MOVE RIGHT
+    if (key == "d" && canyon.isPlummeting == false) {
+        isRight = true;
+    }
+    //JUMP
+    if (isFalling == false && key == "w" && canyon.isPlummeting == false) {
+        gameChar_y -= 100;
+        isFalling = true;
+    }
+}
+
+function keyReleased() {
+    // if statements to control the animation of the character when
+    // keys are released.
+    console.log("keyReleased: " + key);
+    //RELEASE LEFT
+    if (key == "a") {
+        isLeft = false;
+    }
+    //RELEASE RIGHT
+    if (key == "d") {
+        isRight = false;
+    }
+}
